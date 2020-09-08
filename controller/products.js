@@ -25,7 +25,7 @@ exports.insertCategory = (req, res, next) => {
 exports.getAllProduct = (req, res, next) => {
     Product.find()
     .then(result => {
-      console.log(result)
+     
       res.status(200).json(
           {
         post : result.length
@@ -41,7 +41,7 @@ exports.getSingleProduct = (req, res, next) => {
     const id = req.params.id
     Product.findById(id)
     .then(result => {
-        console.log(result)
+     
         res.status(200).json({
         post : result
         });
@@ -57,7 +57,7 @@ exports.getSingleProduct = (req, res, next) => {
 exports.getAllActiveProduct = (req, res, next) => {
   Product.find({"status":"active"})
   .then(result => {
-    console.log(result)
+   
     res.status(200).json(
         {
       post : result
@@ -74,7 +74,7 @@ exports.getAllActiveProduct = (req, res, next) => {
 exports.getAllCategory = (req, res, next) => {
     Product.distinct("category")
     .then(result => {
-        console.log(result);
+       
         res.status(200).json({
             category : result
         })
@@ -87,7 +87,7 @@ exports.getCategoryProduct = (req, res, next) => {
   console.log(req.body)
   Product.find({"category" : `${searchItem}`})
   .then(result => {
-    console.log(result)
+    
     res.status(200).json({
       post : result
     });
@@ -102,7 +102,7 @@ exports.getCategoryProduct = (req, res, next) => {
 exports.getAllProductBrand = (req, res, next) => {
     Product.aggregate([{$group : {_id : "$brand"}}])
     .then(result => {
-      console.log(result)
+     
       res.status(200).json(
           {
         post : result
@@ -117,7 +117,7 @@ exports.getAllProductBrand = (req, res, next) => {
 
 exports.getBrandProduct = (req, res, next) => {
   const searchItem = req.body.category;
-  console.log(req.body)
+ 
   Product.find({"brand" : `${searchItem}`})
   .then(result => {
     console.log(result)
@@ -138,7 +138,7 @@ exports.getSearchResult = (req, res, next) => {
     console.log(req.body)
     Product.find({ $text: { $search: `${searchItem}` } })
     .then(result => {
-      console.log(result)
+     
       res.status(200).json({
         post : result
       });
@@ -151,21 +151,23 @@ exports.getSearchResult = (req, res, next) => {
 
 
 
-// Update the status
+//Update the status
 
-exports.activePosts = (req,res,next) => {
-  const id = req.body.id;
+
+
+
+
+
+
+exports.activeUpdate = (req,res,next) => {
+  
+  const id = req.body.checkedBoxes;
   const status = 'active'
-  Product.findById(id)
-  .then(post => {
-    if(!post){
-      const error = new Error('Could not find');
-      error.statusCode = 404;
-      throw error;
-    }
-    post.status = status
-    return post.save();
-  })
+  Product.updateMany(
+    { _id: { $in:id } },
+    { $set: { status : `${status}` } },
+    {multi: true}
+ )
   .then(result => {
     res.status(200).json({
       message : 'Successfully updated',
@@ -177,7 +179,25 @@ exports.activePosts = (req,res,next) => {
   })
 }
 
-
+exports.inactiveUpdate = (req,res,next) => {
+  
+  const id = req.body.checkedBoxes;
+  const status = 'inactive'
+  Product.updateMany(
+    { _id: { $in:id } },
+    { $set: { status : `${status}` } },
+    {multi: true}
+ )
+  .then(result => {
+    res.status(200).json({
+      message : 'Successfully updated',
+      post : result
+    })
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
 
 // Count Products
 

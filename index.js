@@ -1,4 +1,4 @@
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8000;
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -22,6 +22,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoute);
 app.use('/api', productRoute);
 app.use('/user', customerRoute);
+app.get('/', (req, res) => res.json('Mysastaprice Server'))
 // Routes
 
 
@@ -37,7 +38,7 @@ mongoose.connect(
     'mongodb+srv://webscraping:Qwerty123@clusterscraping-eukyu.mongodb.net/test?retryWrites=true&w=majority'
 ).then(result => {
     app.listen(port, () => {
-        console.log("Server running at "+port);
+        console.log("Server running at http://localhost:"+port);
     })
 })
 .catch(err => console.log(err))

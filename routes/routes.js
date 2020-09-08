@@ -9,7 +9,8 @@ const {
     getCategoryProduct,
     getSearchResult, 
     getAllProductBrand, 
-    activePosts,
+    activeUpdate,
+    inactiveUpdate,
     countAll,
     countActive,
     countBrand,
@@ -41,7 +42,8 @@ router.post('/brand/product', isAdmin, getBrandProduct);
 
 // Get search result
 router.post('/product/search',isAdmin,getSearchResult);
-router.put('/update/active',isAdmin, activePosts);
+router.put('/update/active',isAdmin, activeUpdate);
+router.put('/update/inactive',isAdmin, inactiveUpdate);
 
 
 router.get('/count', isAdmin, countAll)
